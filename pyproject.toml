@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "Guide Self API"
+version = "0.0.1"
+description = ""
+authors = ["BRANYA43 <bogdan.timchenko.2504@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
