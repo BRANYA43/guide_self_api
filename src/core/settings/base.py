@@ -2,9 +2,7 @@
 Django settings for core project.
 """
 
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parent.parent
+from core.settings import BASE_DIR
 
 SECRET_KEY = 'django-insecure-5044lkfwyk=lz-az(@b08xxve9r2_44)q!u1@-73h_n2u$s=gh'
 
