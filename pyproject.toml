@@ -23,3 +23,11 @@ extend-select = ['T20']
 
 [tool.ruff.format]
 quote-style = "single"
+
+
+[tool.mypy]
+exclude = ['migrations', 'venv', 'cache', 'manage.py']
+strict = true
+no_implicit_optional = false
+ignore_missing_imports = true
+scripts_are_modules = true
