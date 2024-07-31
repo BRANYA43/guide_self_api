@@ -3,12 +3,13 @@ Django settings for core project.
 """
 
 from core.settings import BASE_DIR
+from core.settings.environments import envs
 
-SECRET_KEY = 'django-insecure-5044lkfwyk=lz-az(@b08xxve9r2_44)q!u1@-73h_n2u$s=gh'
+SECRET_KEY = envs.api.secret_key
 
-DEBUG = True
+DEBUG = envs.api.debug
 
-ALLOWED_HOSTS: list[str] = []
+ALLOWED_HOSTS = envs.api.allowed_hosts
 
 
 INSTALLED_APPS = [
