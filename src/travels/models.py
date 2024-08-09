@@ -37,7 +37,7 @@ class Info(BaseModel):
     content_obj = GenericForeignKey()
 
     class Meta:
-        verbose_name = ('Localized Information',)
+        verbose_name = 'Localized Information'
         verbose_name_plural = 'Localized Information'
 
     def __str__(self):
