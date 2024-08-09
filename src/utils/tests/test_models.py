@@ -11,5 +11,5 @@ class TestModel(BaseModel):
 class BaseModelTest(TestCase):
     def test_create_model_instance(self):
         instance = TestModel(slug='slug')
-        self.assertIsNotNone(instance.uuid)
+        self.assertIsNotNone(instance.id)
         self.assertEqual(instance.slug, 'slug')

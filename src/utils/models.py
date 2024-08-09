@@ -4,11 +4,12 @@ from django.db import models
 
 
 class BaseModel(models.Model):
-    uuid = models.UUIDField(
+    id = models.UUIDField(
         verbose_name='UUID',
         primary_key=True,
         default=uuid4,
         db_index=True,
+        editable=False,
     )
     slug = models.SlugField(
         verbose_name='Slug',
