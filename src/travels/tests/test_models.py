@@ -1,5 +1,14 @@
 from django.test import TestCase
-from travels.models import Language, Info
+from travels.models import Language, Info, Image
+
+
+class ImageModelTest(TestCase):
+    def setUp(self):
+        self.lang = Language(slug='ukrainian', code='ua')
+        self.image = Image(slug='image', content_obj=self.lang)
+
+    def test_model_representation(self):
+        self.assertEqual(str(self.image), self.image.slug)
 
 
 class InfoModelTest(TestCase):

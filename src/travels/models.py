@@ -3,7 +3,37 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinLengthValidator
 from django.db import models
 
+
 from utils.models import BaseModel
+
+
+class Image(BaseModel):
+    class Type(models.TextChoices):
+        MAIN = 'main', 'main'
+        EXTRA = 'extra', 'extra'
+
+    type = models.CharField(
+        verbose_name='Type',
+        max_length=5,
+        choices=Type.choices,
+    )
+    file = models.ImageField(
+        verbose_name='File',
+        upload_to='images',
+    )
+    content_type = models.ForeignKey(
+        to=ContentType,
+        on_delete=models.PROTECT,
+    )
+    object_id = models.UUIDField()
+    content_obj = GenericForeignKey()
+
+    class Meta:
+        verbose_name = 'Image'
+        verbose_name_plural = 'Images'
+
+    def __str__(self):
+        return str(self.slug)
 
 
 class Info(BaseModel):
