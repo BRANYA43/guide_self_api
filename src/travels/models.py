@@ -32,9 +32,6 @@ class Image(BaseModel):
         verbose_name = 'Image'
         verbose_name_plural = 'Images'
 
-    def __str__(self):
-        return str(self.slug)
-
 
 class MainImage(Image):
     class Meta:
@@ -93,9 +90,6 @@ class Info(BaseModel):
     class Meta:
         verbose_name = 'Localized Information'
         verbose_name_plural = 'Localized Information'
-
-    def __str__(self):
-        return str(self.slug)
 
 
 class Language(BaseModel):
