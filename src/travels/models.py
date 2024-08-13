@@ -25,6 +25,12 @@ class ImageAndInfoBaseModel(BaseModel):
         abstract = True
 
 
+class Country(ImageAndInfoBaseModel):
+    class Meta:
+        verbose_name = 'Country'
+        verbose_name_plural = 'Countries'
+
+
 class Image(BaseModel):
     class Type(models.TextChoices):
         MAIN = 'main', 'main'
