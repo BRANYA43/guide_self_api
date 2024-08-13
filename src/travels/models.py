@@ -25,6 +25,19 @@ class ImageAndInfoBaseModel(BaseModel):
         abstract = True
 
 
+class City(ImageAndInfoBaseModel):
+    country = models.ForeignKey(
+        verbose_name='Country',
+        to='Country',
+        on_delete=models.PROTECT,
+    )
+
+    class Meta:
+        verbose_name = 'City'
+        verbose_name_plural = 'Cities'
+        default_related_name = 'langs'
+
+
 class Country(ImageAndInfoBaseModel):
     class Meta:
         verbose_name = 'Country'

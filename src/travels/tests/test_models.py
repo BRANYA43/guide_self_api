@@ -4,10 +4,23 @@ from pathlib import Path
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
-from travels.models import Language, Info, Image, MainImage, ExtraImage, ImageAndInfoBaseModel, Country
+from travels.models import Language, Info, Image, MainImage, ExtraImage, ImageAndInfoBaseModel, Country, City
 from utils.models import BaseModel
 
 TEMP_MEDIA_ROOT: Path = settings.BASE_DIR / 'temp_media'
+
+
+class CityModelTest(TestCase):
+    country_model = Country
+    city_model = City
+
+    def test_model_inherit_base_model(self):
+        self.assertTrue(issubclass(self.country_model, ImageAndInfoBaseModel))
+
+    def test_create_model_instance(self):
+        country = self.country_model.objects.create(slug='ukraine')
+        city = self.city_model(slug='ukraine', country=country)
+        city.full_clean()  # not raise
 
 
 class CountryModelTest(TestCase):
