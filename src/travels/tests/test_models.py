@@ -4,9 +4,24 @@ from pathlib import Path
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
-from travels.models import Language, Info, Image, MainImage
+from travels.models import Language, Info, Image, MainImage, ExtraImage
 
 TEMP_MEDIA_ROOT: Path = settings.BASE_DIR / 'temp_media'
+
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
+class ExtraImageProxyModelTest(TestCase):
+    def setUp(self):
+        self.file = SimpleUploadedFile(name='image.png', content=b'imagepng', content_type='image/png')
+        self.lang = Language(slug='ukrainian', code='ua')
+        self.image = ExtraImage(slug='lang_image', content_obj=self.lang, file=self.file)
+
+    def tearDown(self):
+        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
+
+    def test_model_sets_type_as_MAIN_at_save_time(self):
+        self.image.save()
+        self.assertEqual(self.image.type, Image.Type.EXTRA)
 
 
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)

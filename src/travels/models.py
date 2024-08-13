@@ -48,6 +48,18 @@ class MainImage(Image):
         super().save(force_insert, force_update, using, update_fields)
 
 
+class ExtraImage(Image):
+    class Meta:
+        verbose_name = 'Extra Image'
+        verbose_name_plural = 'Extra Images'
+        proxy = True
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.type != Image.Type.EXTRA:
+            self.type = Image.Type.EXTRA
+        super().save(force_insert, force_update, using, update_fields)
+
+
 class Info(BaseModel):
     name = models.CharField(
         verbose_name='Name',
