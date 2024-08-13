@@ -9,7 +9,6 @@ class TestModel(BaseModel):
 
 
 class BaseModelTest(TestCase):
-    def test_create_model_instance(self):
+    def test_model_str_representation(self):
         instance = TestModel(slug='slug')
-        self.assertIsNotNone(instance.id)
-        self.assertEqual(instance.slug, 'slug')
+        self.assertEqual(str(instance), instance.slug)
