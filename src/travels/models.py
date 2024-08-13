@@ -36,6 +36,18 @@ class Image(BaseModel):
         return str(self.slug)
 
 
+class MainImage(Image):
+    class Meta:
+        verbose_name = 'Main Image'
+        verbose_name_plural = 'Main Images'
+        proxy = True
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.type != Image.Type.MAIN:
+            self.type = Image.Type.MAIN
+        super().save(force_insert, force_update, using, update_fields)
+
+
 class Info(BaseModel):
     name = models.CharField(
         verbose_name='Name',
