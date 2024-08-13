@@ -4,10 +4,17 @@ from pathlib import Path
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
-from travels.models import Language, Info, Image, MainImage, ExtraImage
+from travels.models import Language, Info, Image, MainImage, ExtraImage, ImageAndInfoBaseModel
 from utils.models import BaseModel
 
 TEMP_MEDIA_ROOT: Path = settings.BASE_DIR / 'temp_media'
+
+
+class ImageAndInfoBaseModelTest(TestCase):
+    base_model = ImageAndInfoBaseModel
+
+    def test_model_inherit_base_model(self):
+        self.assertTrue(issubclass(self.base_model, BaseModel))
 
 
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)

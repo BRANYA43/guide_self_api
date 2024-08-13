@@ -1,10 +1,28 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinLengthValidator
 from django.db import models
 
 from travels.services.file_uploader import FileUploader
 from utils.models import BaseModel
+
+
+class ImageAndInfoBaseModel(BaseModel):
+    info = GenericRelation(
+        verbose_name='Localized Information',
+        to='Info',
+    )
+    main_image = GenericRelation(
+        verbose_name='Main Image',
+        to='MainImage',
+    )
+    extra_images = GenericRelation(
+        verbose_name='Extra Images',
+        to='ExtraImage',
+    )
+
+    class Meta:
+        abstract = True
 
 
 class Image(BaseModel):
