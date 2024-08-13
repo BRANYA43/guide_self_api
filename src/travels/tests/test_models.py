@@ -1,14 +1,30 @@
-from django.test import TestCase
+import shutil
+from pathlib import Path
+
+from django.conf import settings
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase, override_settings
 from travels.models import Language, Info, Image
 
+TEMP_MEDIA_ROOT: Path = settings.BASE_DIR / 'temp_media'
 
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class ImageModelTest(TestCase):
     def setUp(self):
+        self.file = SimpleUploadedFile(name='image.png', content=b'imagepng', content_type='image/png')
         self.lang = Language(slug='ukrainian', code='ua')
-        self.image = Image(slug='image', content_obj=self.lang)
+        self.image = Image(slug='lang_image', content_obj=self.lang, file=self.file)
+
+    def tearDown(self):
+        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def test_model_representation(self):
         self.assertEqual(str(self.image), self.image.slug)
+
+    def test_file_field_uses_uploader(self):
+        self.image.save()
+        self.assertEqual(self.image.file.path, str(Path(TEMP_MEDIA_ROOT, 'images/language', f'{self.image.slug}.png')))
 
 
 class InfoModelTest(TestCase):

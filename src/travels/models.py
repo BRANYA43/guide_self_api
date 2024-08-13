@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinLengthValidator
 from django.db import models
 
-
+from travels.services.file_uploader import FileUploader
 from utils.models import BaseModel
 
 
@@ -19,7 +19,7 @@ class Image(BaseModel):
     )
     file = models.ImageField(
         verbose_name='File',
-        upload_to='images',
+        upload_to=FileUploader('images'),
     )
     content_type = models.ForeignKey(
         to=ContentType,
