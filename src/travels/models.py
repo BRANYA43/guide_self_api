@@ -7,6 +7,9 @@ from travels.services.file_uploader import FileUploader
 from utils.models import BaseModel
 
 
+########################################################################################################################
+# Abstract Models
+########################################################################################################################
 class ImageAndInfoBaseModel(BaseModel):
     info = GenericRelation(
         verbose_name='Localized Information',
@@ -25,6 +28,9 @@ class ImageAndInfoBaseModel(BaseModel):
         abstract = True
 
 
+########################################################################################################################
+# Models
+########################################################################################################################
 class City(ImageAndInfoBaseModel):
     country = models.ForeignKey(
         verbose_name='Country',
@@ -44,6 +50,27 @@ class Country(ImageAndInfoBaseModel):
         verbose_name_plural = 'Countries'
 
 
+class Language(BaseModel):
+    code = models.CharField(
+        verbose_name='ISO Code',
+        max_length=2,
+        validators=[MinLengthValidator(2)],
+        unique=True,
+        db_index=True,
+    )
+
+    class Meta:
+        verbose_name = 'Language'
+        verbose_name_plural = 'Languages'
+        default_related_name = 'langs'
+
+    def __str__(self):
+        return f'{self.slug}, {self.code}'
+
+
+########################################################################################################################
+# Polymorph Models
+########################################################################################################################
 class Image(BaseModel):
     class Type(models.TextChoices):
         MAIN = 'main', 'main'
@@ -68,30 +95,6 @@ class Image(BaseModel):
     class Meta:
         verbose_name = 'Image'
         verbose_name_plural = 'Images'
-
-
-class MainImage(Image):
-    class Meta:
-        verbose_name = 'Main Image'
-        verbose_name_plural = 'Main Images'
-        proxy = True
-
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if self.type != Image.Type.MAIN:
-            self.type = Image.Type.MAIN
-        super().save(force_insert, force_update, using, update_fields)
-
-
-class ExtraImage(Image):
-    class Meta:
-        verbose_name = 'Extra Image'
-        verbose_name_plural = 'Extra Images'
-        proxy = True
-
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if self.type != Image.Type.EXTRA:
-            self.type = Image.Type.EXTRA
-        super().save(force_insert, force_update, using, update_fields)
 
 
 class Info(BaseModel):
@@ -129,19 +132,28 @@ class Info(BaseModel):
         verbose_name_plural = 'Localized Information'
 
 
-class Language(BaseModel):
-    code = models.CharField(
-        verbose_name='ISO Code',
-        max_length=2,
-        validators=[MinLengthValidator(2)],
-        unique=True,
-        db_index=True,
-    )
-
+########################################################################################################################
+# Proxy Models
+########################################################################################################################
+class MainImage(Image):
     class Meta:
-        verbose_name = 'Language'
-        verbose_name_plural = 'Languages'
-        default_related_name = 'langs'
+        verbose_name = 'Main Image'
+        verbose_name_plural = 'Main Images'
+        proxy = True
 
-    def __str__(self):
-        return f'{self.slug}, {self.code}'
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.type != Image.Type.MAIN:
+            self.type = Image.Type.MAIN
+        super().save(force_insert, force_update, using, update_fields)
+
+
+class ExtraImage(Image):
+    class Meta:
+        verbose_name = 'Extra Image'
+        verbose_name_plural = 'Extra Images'
+        proxy = True
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.type != Image.Type.EXTRA:
+            self.type = Image.Type.EXTRA
+        super().save(force_insert, force_update, using, update_fields)
