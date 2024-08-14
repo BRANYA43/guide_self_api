@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline, GenericStackedInline
 
-from travels.models import Language, Info, MainImage
+from travels.models import Language, Info, MainImage, ExtraImage
 
 
 class MainImageInline(GenericStackedInline):
@@ -13,6 +13,17 @@ class MainImageInline(GenericStackedInline):
 
     def get_queryset(self, request):
         return super().get_queryset(request).filter(type=self.model.Type.MAIN)
+
+
+class ExtraImageInline(GenericStackedInline):
+    model = ExtraImage
+    fields = ('slug', 'file', 'updated_at', 'created_at')
+    readonly_fields = ('updated_at', 'created_at')
+    extra = 1
+    per_page = 2
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(type=self.model.Type.EXTRA)
 
 
 class InfoInline(GenericTabularInline):
