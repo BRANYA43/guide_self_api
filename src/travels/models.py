@@ -31,6 +31,36 @@ class ImageAndInfoBaseModel(BaseModel):
 ########################################################################################################################
 # Models
 ########################################################################################################################
+class Place(ImageAndInfoBaseModel):
+    type = models.ForeignKey(
+        verbose_name='Type',
+        to='PlaceType',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    city = models.ForeignKey(
+        verbose_name='City',
+        to='City',
+        on_delete=models.PROTECT,
+    )
+    latitude = models.DecimalField(
+        verbose_name='Latitude',
+        max_digits=7,
+        decimal_places=5,
+    )
+    longitude = models.DecimalField(
+        verbose_name='Longitude',
+        max_digits=8,
+        decimal_places=5,
+    )
+
+    class Meta:
+        verbose_name = 'Place'
+        verbose_name_plural = 'Places'
+        default_related_name = 'places'
+
+
 class PlaceType(BaseModel):
     class Meta:
         verbose_name = 'Place Type'

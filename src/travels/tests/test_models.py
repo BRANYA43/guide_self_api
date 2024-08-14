@@ -1,14 +1,37 @@
 import shutil
+from decimal import Decimal
 from pathlib import Path
 
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
-from travels.models import Language, Info, Image, MainImage, ExtraImage, ImageAndInfoBaseModel, Country, City, PlaceType
+from travels.models import (
+    Language,
+    Info,
+    Image,
+    MainImage,
+    ExtraImage,
+    ImageAndInfoBaseModel,
+    Country,
+    City,
+    PlaceType,
+    Place,
+)
 from utils.models import BaseModel
 from utils.tests import BaseTestCase
 
 TEMP_MEDIA_ROOT: Path = settings.BASE_DIR / 'temp_media'
+
+
+class PlaceModelTest(BaseTestCase):
+    def test_model_inherit_base_model(self):
+        self.assertTrue(issubclass(Place, ImageAndInfoBaseModel))
+
+    def test_create_model_instance(self):
+        country = self.create_test_country()
+        city = self.create_test_city(country=country)
+        place = Place(slug='monument', city=city, latitude=Decimal('89.00001'), longitude=Decimal('179.00001'))
+        place.full_clean()
 
 
 class PlaceTypeModelTest(BaseTestCase):
