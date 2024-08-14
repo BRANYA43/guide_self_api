@@ -1,6 +1,15 @@
 from django.contrib import admin
+from django.contrib.contenttypes.admin import GenericTabularInline
 
 from travels.models import Language, Info
+
+
+class InfoInline(GenericTabularInline):
+    model = Info
+    fields = ('slug', 'lang', 'name', 'updated_at', 'created_at')
+    readonly_fields = ('updated_at', 'created_at')
+    extra = 1
+    show_change_link = True
 
 
 @admin.register(Info)
