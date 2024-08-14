@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline, GenericStackedInline
 
-from travels.models import Language, Info, MainImage, ExtraImage, Country, City, PlaceType
+from travels.models import Language, Info, MainImage, ExtraImage, Country, City, PlaceType, Place
 
 
 ########################################################################################################################
@@ -40,6 +40,20 @@ class InfoInline(GenericTabularInline):
 ########################################################################################################################
 # Models
 ########################################################################################################################
+@admin.register(Place)
+class PlaceAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'type', 'updated_at', 'created_at')
+    readonly_fields = ('updated_at', 'created_at')
+    fieldsets = (
+        ('General Information', dict(fields=('slug', 'type', 'city'))),
+        ('GPS Coordinates', dict(fields=('latitude', 'longitude'))),
+        ('Dates', dict(fields=('updated_at', 'created_at'))),
+    )
+    ordering = ('type__slug', 'slug')
+    search_fields = ('slug', 'type__slug')
+    inlines = (MainImageInline, ExtraImageInline, InfoInline)
+
+
 @admin.register(PlaceType)
 class PlaceTypeAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'updated_at', 'created_at')
