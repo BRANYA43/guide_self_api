@@ -4,6 +4,9 @@ from django.contrib.contenttypes.admin import GenericTabularInline, GenericStack
 from travels.models import Language, Info, MainImage, ExtraImage, Country, City
 
 
+########################################################################################################################
+# Inlines
+########################################################################################################################
 class MainImageInline(GenericStackedInline):
     model = MainImage
     fields = ('slug', 'file', 'updated_at', 'created_at')
@@ -34,6 +37,9 @@ class InfoInline(GenericTabularInline):
     show_change_link = True
 
 
+########################################################################################################################
+# Models
+########################################################################################################################
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'updated_at', 'created_at')
