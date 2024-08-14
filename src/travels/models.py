@@ -31,6 +31,13 @@ class ImageAndInfoBaseModel(BaseModel):
 ########################################################################################################################
 # Models
 ########################################################################################################################
+class PlaceType(BaseModel):
+    class Meta:
+        verbose_name = 'Place Type'
+        verbose_name_plural = 'Place Types'
+        default_related_name = 'types'
+
+
 class City(ImageAndInfoBaseModel):
     country = models.ForeignKey(
         verbose_name='Country',
