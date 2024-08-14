@@ -4,6 +4,7 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 
 from travels.services.file_uploader import FileUploader
+from travels.validators import GPSCoordinateValidator
 from utils.models import BaseModel
 
 
@@ -45,14 +46,10 @@ class Place(ImageAndInfoBaseModel):
         on_delete=models.PROTECT,
     )
     latitude = models.DecimalField(
-        verbose_name='Latitude',
-        max_digits=7,
-        decimal_places=5,
+        verbose_name='Latitude', max_digits=7, decimal_places=5, validators=[GPSCoordinateValidator('latitude')]
     )
     longitude = models.DecimalField(
-        verbose_name='Longitude',
-        max_digits=8,
-        decimal_places=5,
+        verbose_name='Longitude', max_digits=8, decimal_places=5, validators=[GPSCoordinateValidator('longitude')]
     )
 
     class Meta:

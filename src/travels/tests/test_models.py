@@ -1,8 +1,8 @@
 import shutil
-from decimal import Decimal
 from pathlib import Path
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
 from travels.models import (
@@ -24,14 +24,66 @@ TEMP_MEDIA_ROOT: Path = settings.BASE_DIR / 'temp_media'
 
 
 class PlaceModelTest(BaseTestCase):
+    def setUp(self):
+        self.country = self.create_test_country()
+        self.city = self.create_test_city(country=self.country)
+        self.data = dict(
+            slug='monument',
+            city=self.city,
+            latitude=0,
+            longitude=0,
+        )
+
     def test_model_inherit_base_model(self):
         self.assertTrue(issubclass(Place, ImageAndInfoBaseModel))
 
     def test_create_model_instance(self):
-        country = self.create_test_country()
-        city = self.create_test_city(country=country)
-        place = Place(slug='monument', city=city, latitude=Decimal('89.00001'), longitude=Decimal('179.00001'))
+        place = Place(**self.data)
         place.full_clean()
+
+    def test_latitude_field_must_be_in_specified_range(self):
+        place = Place(**self.data)
+
+        place.latitude = -90
+        place.full_clean()  # not raise
+
+        place.latitude = 90
+        place.full_clean()  # not raise
+
+        place.latitude = -90.1
+        self.assertRaisesRegex(
+            ValidationError,
+            r'Latitude must be in the range from -90 to 90 inclusive.',
+            place.full_clean,
+        )
+        place.latitude = 90.1
+        self.assertRaisesRegex(
+            ValidationError,
+            r'Latitude must be in the range from -90 to 90 inclusive.',
+            place.full_clean,
+        )
+
+    def test_longitude_field_must_be_in_specified_range(self):
+        place = Place(**self.data)
+
+        place.longitude = -180
+        place.full_clean()  # not raise
+
+        place.longitude = 180
+        place.full_clean()  # not raise
+
+        place.longitude = -180.1
+        self.assertRaisesRegex(
+            ValidationError,
+            r'Longitude must be in the range from -180 to 180 inclusive.',
+            place.full_clean,
+        )
+        place.longitude = 180.1
+        self.assertRaisesRegex(
+            ValidationError,
+            r'Longitude must be in the range from -180 to 180 inclusive.',
+            place.full_clean,
+        )
 
 
 class PlaceTypeModelTest(BaseTestCase):
