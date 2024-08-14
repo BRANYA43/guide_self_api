@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline, GenericStackedInline
 
-from travels.models import Language, Info, MainImage, ExtraImage, Country
+from travels.models import Language, Info, MainImage, ExtraImage, Country, City
 
 
 class MainImageInline(GenericStackedInline):
@@ -44,6 +44,19 @@ class CountryAdmin(admin.ModelAdmin):
     )
     ordering = ('slug',)
     search_fields = ('slug',)
+    inlines = (MainImageInline, ExtraImageInline, InfoInline)
+
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'country', 'updated_at', 'created_at')
+    readonly_fields = ('updated_at', 'created_at')
+    fieldsets = (
+        ('General Information', dict(fields=('slug', 'country'))),
+        ('Dates', dict(fields=('updated_at', 'created_at'))),
+    )
+    ordering = ('slug', 'country__slug')
+    search_fields = ('slug', 'country__slug')
     inlines = (MainImageInline, ExtraImageInline, InfoInline)
 
 
