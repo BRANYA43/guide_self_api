@@ -1,10 +1,11 @@
+from datetime import timedelta
 from typing import Type
 from django.test import TestCase
 
 from django.core.files.uploadedfile import UploadedFile
 from django.db.models import Model
 
-from travels.models import Language, Info, Image, Country, City, PlaceType, Place
+from travels.models import Language, Info, Image, Country, City, PlaceType, Place, Rout
 
 
 class BaseTestCase(TestCase):
@@ -79,3 +80,8 @@ class BaseTestCase(TestCase):
         )
         place.refresh_from_db()
         return place
+
+    def create_test_rout(self, *, slug='rout', duration=timedelta(hours=1), **extra_fields) -> Rout:
+        rout = self._create_test_model_instance(Rout, slug=slug, duration=duration, **extra_fields)
+        rout.refresh_from_db()
+        return rout
