@@ -17,6 +17,7 @@ pydantic = {extras = ["email"], version = "^2.8.2"}
 pydantic-settings = "^2.4.0"
 uvicorn = "^0.30.5"
 django-cleanup = "^8.1.0"
+django-admin-ordering = "^0.18.2"
 
 
 [build-system]
