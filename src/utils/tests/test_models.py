@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from utils.models import BaseModel
+from utils.models import BaseModel, DatesMixin, UUIDMixin
 
 
 class TestModel(BaseModel):
@@ -9,6 +9,9 @@ class TestModel(BaseModel):
 
 
 class BaseModelTest(TestCase):
+    def test_model_inherits_mixins(self):
+        self.assertTrue(issubclass(BaseModel, (UUIDMixin, DatesMixin)))
+
     def test_model_str_representation(self):
         instance = TestModel(slug='slug')
         self.assertEqual(str(instance), instance.slug)
