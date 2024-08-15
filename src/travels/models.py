@@ -1,6 +1,8 @@
+from datetime import timedelta
+
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 
 from travels.services.file_uploader import FileUploader
@@ -32,6 +34,15 @@ class ImageAndInfoBaseModel(BaseModel):
 ########################################################################################################################
 # Models
 ########################################################################################################################
+class Rout(ImageAndInfoBaseModel):
+    duration = models.DurationField(verbose_name='Duration', validators=[MinValueValidator(timedelta(seconds=0))])
+
+    class Meta:
+        verbose_name = 'Rout'
+        verbose_name_plural = 'Routs'
+        default_related_name = 'routs'
+
+
 class Place(ImageAndInfoBaseModel):
     type = models.ForeignKey(
         verbose_name='Type',

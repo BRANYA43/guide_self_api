@@ -1,4 +1,5 @@
 import shutil
+from datetime import timedelta
 from pathlib import Path
 
 from django.conf import settings
@@ -16,11 +17,37 @@ from travels.models import (
     City,
     PlaceType,
     Place,
+    Rout,
 )
 from utils.models import BaseModel
 from utils.tests import BaseTestCase
 
 TEMP_MEDIA_ROOT: Path = settings.BASE_DIR / 'temp_media'
+
+
+class RoutModelTest(BaseTestCase):
+    def setUp(self):
+        self.data = dict(
+            slug='pretty_kharkiv',
+            duration=timedelta(hours=1),
+        )
+
+    def test_model_inherit_base_model(self):
+        self.assertTrue(issubclass(Rout, ImageAndInfoBaseModel))
+
+    def test_create_model_instance(self):
+        rout = Rout(**self.data)
+        rout.full_clean()  # not raise
+
+    def test_duration_field_cannot_be_less_that_0(self):
+        self.data['duration'] = timedelta(seconds=-1)
+        rout = Rout(**self.data)
+
+        self.assertRaisesRegex(
+            ValidationError,
+            r'Ensure this value is greater than or equal to 0:00:00.',
+            rout.full_clean,
+        )
 
 
 class PlaceModelTest(BaseTestCase):
