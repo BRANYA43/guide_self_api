@@ -1,12 +1,20 @@
+from admin_ordering.admin import OrderableAdmin
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline, GenericStackedInline
 
-from travels.models import Language, Info, MainImage, ExtraImage, Country, City, PlaceType, Place
+from travels.models import Language, Info, MainImage, ExtraImage, Country, City, PlaceType, Place, RoutPoint
 
 
 ########################################################################################################################
 # Inlines
 ########################################################################################################################
+class RoutPointInline(OrderableAdmin, admin.TabularInline):
+    model = RoutPoint
+    fields = ('ordering', 'place', 'updated_at', 'created_at')
+    readonly_fields = ('updated_at', 'created_at')
+    ordering_field_hide_input = True
+
+
 class MainImageInline(GenericStackedInline):
     model = MainImage
     fields = ('slug', 'file', 'updated_at', 'created_at')
