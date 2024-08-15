@@ -46,10 +46,16 @@ class Place(ImageAndInfoBaseModel):
         on_delete=models.PROTECT,
     )
     latitude = models.DecimalField(
-        verbose_name='Latitude', max_digits=7, decimal_places=5, validators=[GPSCoordinateValidator('latitude')]
+        verbose_name='Latitude',
+        max_digits=7,
+        decimal_places=5,
+        validators=[GPSCoordinateValidator('latitude')],
     )
     longitude = models.DecimalField(
-        verbose_name='Longitude', max_digits=8, decimal_places=5, validators=[GPSCoordinateValidator('longitude')]
+        verbose_name='Longitude',
+        max_digits=8,
+        decimal_places=5,
+        validators=[GPSCoordinateValidator('longitude')],
     )
 
     class Meta:
