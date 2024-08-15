@@ -35,7 +35,10 @@ class ImageAndInfoBaseModel(BaseModel):
 # Models
 ########################################################################################################################
 class Rout(ImageAndInfoBaseModel):
-    duration = models.DurationField(verbose_name='Duration', validators=[MinValueValidator(timedelta(seconds=0))])
+    duration = models.DurationField(
+        verbose_name='Duration',
+        validators=[MinValueValidator(timedelta(seconds=0))],
+    )
 
     class Meta:
         verbose_name = 'Rout'
