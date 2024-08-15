@@ -2,6 +2,7 @@ import shutil
 from datetime import timedelta
 from pathlib import Path
 
+from admin_ordering.models import OrderableModel
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -18,11 +19,62 @@ from travels.models import (
     PlaceType,
     Place,
     Rout,
+    RoutPoint,
 )
-from utils.models import BaseModel
+from utils.models import BaseModel, UUIDMixin, DatesMixin
 from utils.tests import BaseTestCase
 
 TEMP_MEDIA_ROOT: Path = settings.BASE_DIR / 'temp_media'
+
+
+class RoutPointModelTest(BaseTestCase):
+    def setUp(self):
+        self.country = self.create_test_country()
+        self.city = self.create_test_city(country=self.country)
+        self.place = self.create_test_place(city=self.city)
+        self.rout = self.create_test_rout()
+        self.data = dict(
+            rout=self.rout,
+            place=self.place,
+            ordering=1,
+        )
+
+    def test_model_inherits_mixins(self):
+        self.assertTrue(issubclass(RoutPoint, (UUIDMixin, DatesMixin, OrderableModel)))
+
+    def test_create_model_instance(self):
+        point = RoutPoint(**self.data)
+        point.full_clean()  # not raise
+
+    def test_ordering_is_set_for_each_routs_individually_at_saving(self):
+        rout_1 = self.create_test_rout(slug='rout_1')
+        rout_2 = self.create_test_rout(slug='rout_2')
+
+        point_1_1 = RoutPoint.objects.create(rout=rout_1, place=self.place)
+        point_1_2 = RoutPoint.objects.create(rout=rout_1, place=self.place)
+        point_2_1 = RoutPoint.objects.create(rout=rout_2, place=self.place)
+        point_2_2 = RoutPoint.objects.create(rout=rout_2, place=self.place)
+
+        self.assertEqual(point_1_1.ordering, 10)
+        self.assertEqual(point_1_2.ordering, 20)
+        self.assertEqual(point_2_1.ordering, 10)
+        self.assertEqual(point_2_2.ordering, 20)
+
+    def test_previous_property_returns_previous_rout_point_or_none(self):
+        del self.data['ordering']
+        point_1 = RoutPoint.objects.create(**self.data, ordering=10)
+        point_2 = RoutPoint.objects.create(**self.data, ordering=20)
+
+        self.assertIsNone(point_1.previous)
+        self.assertEqual(point_2.previous.id, point_1.id)
+
+    def test_next_property_returns_next_rout_point_or_none(self):
+        del self.data['ordering']
+        point_1 = RoutPoint.objects.create(**self.data, ordering=10)
+        point_2 = RoutPoint.objects.create(**self.data, ordering=20)
+
+        self.assertEqual(point_1.next.id, point_2.id)
+        self.assertIsNone(point_2.next)
 
 
 class RoutModelTest(BaseTestCase):

@@ -1,13 +1,16 @@
 from datetime import timedelta
+from typing import Union
 
+from admin_ordering.models import OrderableModel
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
+from django.db.models import Max
 
 from travels.services.file_uploader import FileUploader
 from travels.validators import GPSCoordinateValidator
-from utils.models import BaseModel
+from utils.models import BaseModel, DatesMixin, UUIDMixin
 
 
 ########################################################################################################################
@@ -34,6 +37,46 @@ class ImageAndInfoBaseModel(BaseModel):
 ########################################################################################################################
 # Models
 ########################################################################################################################
+class RoutPoint(UUIDMixin, DatesMixin, OrderableModel):
+    rout = models.ForeignKey(
+        verbose_name='Rout',
+        to='Rout',
+        on_delete=models.CASCADE,
+        related_name='points',
+    )
+    place = models.ForeignKey(
+        verbose_name='Place',
+        to='Place',
+        on_delete=models.PROTECT,
+    )
+
+    class Meta(OrderableModel.Meta):
+        verbose_name = 'Rout Point'
+        verbose_name_plural = 'Rout Points'
+        default_related_name = 'rout_points'
+
+    def save(self, *args, **kwargs):
+        if not self.ordering:
+            max = self.rout.points.aggregate(m=Max('ordering'))['m']
+            self.ordering = 10 + (max or 0)
+        super().save(*args, **kwargs)
+
+    # TODO previous and next must be async methods
+    @property
+    def previous(self) -> Union['RoutPoint', None]:
+        try:
+            return self.rout.points.get(ordering=self.ordering - 10)
+        except self.DoesNotExist:
+            return None
+
+    @property
+    def next(self) -> Union['RoutPoint', None]:
+        try:
+            return self.rout.points.get(ordering=self.ordering + 10)
+        except self.DoesNotExist:
+            return None
+
+
 class Rout(ImageAndInfoBaseModel):
     duration = models.DurationField(
         verbose_name='Duration',
