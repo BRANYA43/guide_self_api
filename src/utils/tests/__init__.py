@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.core.files.uploadedfile import UploadedFile
 from django.db.models import Model
 
-from travels.models import Language, Info, Image, Country, City, PlaceType
+from travels.models import Language, Info, Image, Country, City, PlaceType, Place
 
 
 class BaseTestCase(TestCase):
@@ -59,3 +59,23 @@ class BaseTestCase(TestCase):
 
     def create_test_place_type(self, *, slug='place_type', **extra_fields) -> PlaceType:
         return self._create_test_model_instance(PlaceType, slug=slug, **extra_fields)
+
+    def create_test_place(
+        self,
+        *,
+        city: City,
+        slug='place',
+        latitude=0,
+        longitude=0,
+        **extra_fields,
+    ) -> Place:
+        place = self._create_test_model_instance(
+            Place,
+            city=city,
+            slug=slug,
+            latitude=latitude,
+            longitude=longitude,
+            **extra_fields,
+        )
+        place.refresh_from_db()
+        return place
