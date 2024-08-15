@@ -2,7 +2,7 @@ from admin_ordering.admin import OrderableAdmin
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline, GenericStackedInline
 
-from travels.models import Language, Info, MainImage, ExtraImage, Country, City, PlaceType, Place, RoutPoint
+from travels.models import Language, Info, MainImage, ExtraImage, Country, City, PlaceType, Place, RoutPoint, Rout
 
 
 ########################################################################################################################
@@ -48,6 +48,19 @@ class InfoInline(GenericTabularInline):
 ########################################################################################################################
 # Models
 ########################################################################################################################
+@admin.register(Rout)
+class RoutAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'duration', 'updated_at', 'created_at')
+    readonly_fields = ('updated_at', 'created_at')
+    fieldsets = (
+        ('General Information', dict(fields=('slug', 'duration'))),
+        ('Dates', dict(fields=('updated_at', 'created_at'))),
+    )
+    ordering = ('slug',)
+    search_fields = ('slug',)
+    inlines = (RoutPointInline, MainImageInline, ExtraImageInline, InfoInline)
+
+
 @admin.register(Place)
 class PlaceAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'type', 'updated_at', 'created_at')
