@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.core.files.uploadedfile import UploadedFile
 from django.db.models import Model
 
-from travels.models import Language, Info, Image, Country, City, PlaceType, Place, Rout
+from travels.models import Language, Info, Image, Country, City, PlaceType, Place, Rout, RoutPoint
 
 
 class BaseTestCase(TestCase):
@@ -85,3 +85,6 @@ class BaseTestCase(TestCase):
         rout = self._create_test_model_instance(Rout, slug=slug, duration=duration, **extra_fields)
         rout.refresh_from_db()
         return rout
+
+    def create_test_rout_point(self, *, rout: Rout, place: Place, **extra_fields) -> RoutPoint:
+        return self._create_test_model_instance(RoutPoint, rout=rout, place=place, **extra_fields)
