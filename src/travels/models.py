@@ -2,6 +2,7 @@ from datetime import timedelta
 from typing import Union
 
 from admin_ordering.models import OrderableModel
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinLengthValidator, MinValueValidator
@@ -37,6 +38,45 @@ class ImageAndInfoBaseModel(BaseModel):
 ########################################################################################################################
 # Models
 ########################################################################################################################
+class Journey(UUIDMixin, DatesMixin):
+    class Status(models.IntegerChoices):
+        PICKED = 1, 'Picked'
+        IN_PROCESS = 2, 'In process'
+        COMPLETED = 3, 'Completed'
+        CANCELED = 4, 'Canceled'
+
+    user = models.ForeignKey(
+        verbose_name='User',
+        to=get_user_model(),
+        on_delete=models.PROTECT,
+    )
+    rout = models.ForeignKey(
+        verbose_name='Chosen Rout',
+        to='Rout',
+        on_delete=models.PROTECT,
+    )
+    status = models.PositiveIntegerField(
+        verbose_name='Status',
+        choices=Status.choices,
+        default=Status.PICKED,
+    )
+    point = models.ForeignKey(
+        verbose_name='Last Point',
+        to='RoutPoint',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = 'Journey'
+        verbose_name_plural = 'Journeys'
+        default_related_name = 'journeys'
+
+    def __str__(self):
+        return str(self.id)
+
+
 class RoutPoint(UUIDMixin, DatesMixin, OrderableModel):
     rout = models.ForeignKey(
         verbose_name='Rout',

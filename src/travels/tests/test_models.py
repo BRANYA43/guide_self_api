@@ -4,6 +4,7 @@ from pathlib import Path
 
 from admin_ordering.models import OrderableModel
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
@@ -20,11 +21,32 @@ from travels.models import (
     Place,
     Rout,
     RoutPoint,
+    Journey,
 )
 from utils.models import BaseModel, UUIDMixin, DatesMixin
 from utils.tests import BaseTestCase
 
 TEMP_MEDIA_ROOT: Path = settings.BASE_DIR / 'temp_media'
+
+
+class JourneyModelTest(BaseTestCase):
+    def setUp(self):
+        self.country = self.create_test_country()
+        self.city = self.create_test_city(country=self.country)
+        self.place = self.create_test_place(city=self.city)
+        self.rout = self.create_test_rout()
+        self.user = get_user_model().objects.create_user(username='rick', password='rick1234')
+        self.data = dict(
+            user=self.user,
+            rout=self.rout,
+        )
+
+    def test_model_inherits_mixins(self):
+        self.assertTrue(issubclass(RoutPoint, (UUIDMixin, DatesMixin)))
+
+    def test_create_model_instance(self):
+        journey = Journey(**self.data)
+        journey.full_clean()  # not raise
 
 
 class RoutPointModelTest(BaseTestCase):
