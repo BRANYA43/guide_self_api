@@ -2,7 +2,19 @@ from admin_ordering.admin import OrderableAdmin
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline, GenericStackedInline
 
-from travels.models import Language, Info, MainImage, ExtraImage, Country, City, PlaceType, Place, RoutPoint, Rout
+from travels.models import (
+    Language,
+    Info,
+    MainImage,
+    ExtraImage,
+    Country,
+    City,
+    PlaceType,
+    Place,
+    RoutPoint,
+    Rout,
+    Journey,
+)
 
 
 ########################################################################################################################
@@ -48,6 +60,19 @@ class InfoInline(GenericTabularInline):
 ########################################################################################################################
 # Models
 ########################################################################################################################
+@admin.register(Journey)
+class JourneyAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'status', 'updated_at', 'created_at')
+    readonly_fields = ('id', 'updated_at', 'created_at')
+    fieldsets = (
+        ('General Information', dict(fields=('id', 'status', 'user', 'rout', 'point'))),
+        ('Dates', dict(fields=('updated_at', 'created_at'))),
+    )
+    ordering = ('status', '-created_at')
+    search_fields = ('rout__slug', 'point__place__slug', 'user__email', 'user__username')
+    list_filter = ('status',)
+
+
 @admin.register(Rout)
 class RoutAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'duration', 'updated_at', 'created_at')
