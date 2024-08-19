@@ -42,8 +42,7 @@ class ExtraImageInline(GenericStackedInline):
     model = ExtraImage
     fields = ('slug', 'file', 'updated_at', 'created_at')
     readonly_fields = ('updated_at', 'created_at')
-    extra = 1
-    per_page = 2
+    extra = 0
 
     def get_queryset(self, request):
         return super().get_queryset(request).filter(type=self.model.Type.EXTRA)
@@ -53,7 +52,7 @@ class InfoInline(GenericTabularInline):
     model = Info
     fields = ('slug', 'lang', 'name', 'updated_at', 'created_at')
     readonly_fields = ('updated_at', 'created_at')
-    extra = 1
+    extra = 0
     show_change_link = True
 
 
