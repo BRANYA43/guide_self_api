@@ -5,7 +5,7 @@ from admin_ordering.models import OrderableModel
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.core.validators import MinLengthValidator, MinValueValidator
+from django.core.validators import MinLengthValidator, MinValueValidator, MaxLengthValidator
 from django.db import models
 from django.db.models import Max
 
@@ -240,17 +240,11 @@ class Info(BaseModel):
         max_length=100,
         validators=[MinLengthValidator(2)],
     )
-    short_descr = models.CharField(
-        verbose_name='Short Description',
-        max_length=2048,
-        null=True,
-        blank=True,
+    short_descr = models.TextField(
+        verbose_name='Short Description', null=True, blank=True, validators=[MaxLengthValidator(2048)]
     )
-    descr = models.CharField(
-        verbose_name='Full Description',
-        max_length=4096,
-        null=True,
-        blank=True,
+    full_descr = models.TextField(
+        verbose_name='Full Description', null=True, blank=True, validators=[MaxLengthValidator(4096)]
     )
     lang = models.ForeignKey(
         verbose_name='Localization',

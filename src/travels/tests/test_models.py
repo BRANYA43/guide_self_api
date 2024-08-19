@@ -275,13 +275,40 @@ class ImageModelTest(BaseTestCase):
 
 
 class InfoModelTest(BaseTestCase):
+    def setUp(self):
+        self.lang = self.create_test_language()
+        self.data = dict(slug='info', name='new info', lang=self.lang, content_obj=self.lang)
+
     def test_model_inherit_base_model(self):
         self.assertTrue(issubclass(Info, BaseModel))
 
     def test_create_model_instance(self):
-        lang = self.lang = self.create_test_language()
-        info = Info(slug='info', name='new info', lang=lang, content_obj=lang)
+        info = Info(**self.data)
         info.full_clean()  # not raise
+
+    def test_short_descr_field_have_2048_max_length(self):
+        self.data['short_descr'] = 'a' * 2048
+        info = Info(**self.data)
+        info.full_clean()  # not raise
+
+        info.short_descr += 'a'
+        self.assertRaisesRegex(
+            ValidationError,
+            r'Ensure this value has at most 2048 characters \(it has 2049\).',
+            info.full_clean,
+        )
+
+    def test_full_descr_field_have_4096_max_length(self):
+        self.data['full_descr'] = 'a' * 4096
+        info = Info(**self.data)
+        info.full_clean()  # not raise
+
+        info.full_descr += 'a'
+        self.assertRaisesRegex(
+            ValidationError,
+            r'Ensure this value has at most 4096 characters \(it has 4097\).',
+            info.full_clean,
+        )
 
 
 class LanguageModelTest(BaseTestCase):
