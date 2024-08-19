@@ -142,7 +142,7 @@ class InfoAdmin(admin.ModelAdmin):
     list_display = ('slug', 'lang', 'updated_at', 'created_at')
     readonly_fields = ('updated_at', 'created_at', 'get_related_obj')
     fieldsets = (
-        ('General Information', dict(fields=('get_related_obj', 'slug', 'name', 'short_descr', 'descr', 'lang'))),
+        ('General Information', dict(fields=('get_related_obj', 'slug', 'name', 'short_descr', 'full_descr', 'lang'))),
         ('Dates', dict(fields=('updated_at', 'created_at'))),
     )
     ordering = ('lang', 'slug')
