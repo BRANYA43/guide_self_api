@@ -10,7 +10,10 @@ from split_settings.tools import include
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Settings files
-_settings = ('base',)
+_settings = (
+    'base',
+    'baton',
+)
 
 # Combining settings
 include(*[f'{settings}.py' for settings in _settings])

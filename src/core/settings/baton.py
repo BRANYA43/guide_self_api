@@ -1,0 +1,23 @@
+BATON = {
+    'SITE_HEADER': 'GUIDE SELF',
+    'SITE_TITLE': 'Guide Self',
+    'INDEX_TITLE': 'Site administration',
+    'SUPPORT_HREF': 'https://github.com/otto-torino/django-baton/issues',
+    'COPYRIGHT': 'copyright © 2020 <a href="https://www.otto.to.it">Otto srl</a>',  # noqa
+    'POWERED_BY': '<a href="https://www.otto.to.it">Otto srl</a>',
+    'CONFIRM_UNSAVED_CHANGES': True,
+    'SHOW_MULTIPART_UPLOADING': True,
+    'ENABLE_IMAGES_PREVIEW': True,
+    'CHANGELIST_FILTERS_IN_MODAL': True,
+    'CHANGELIST_FILTERS_ALWAYS_OPEN': False,
+    'CHANGELIST_FILTERS_FORM': True,
+    'CHANGEFORM_FIXED_SUBMIT_ROW': True,
+    'MENU_ALWAYS_COLLAPSED': False,
+    'MENU_TITLE': 'Menu',
+    'MESSAGES_TOASTS': False,
+    'GRAVATAR_DEFAULT_IMG': 'retro',
+    'GRAVATAR_ENABLED': True,
+    'LOGIN_SPLASH': '/static/core/img/login-splash.png',
+    'FORCE_THEME': 'dark',
+    'MENU': (),
+}

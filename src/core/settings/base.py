@@ -13,6 +13,7 @@ ALLOWED_HOSTS = envs.api.allowed_hosts
 
 
 INSTALLED_APPS = [
+    'baton',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -23,6 +24,7 @@ INSTALLED_APPS = [
     'travels',
     'utils',
     'django_cleanup.apps.CleanupConfig',
+    'baton.autodiscover',
 ]
 
 MIDDLEWARE = [
