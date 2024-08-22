@@ -1,14 +1,20 @@
 from datetime import timedelta
+from tempfile import TemporaryDirectory
 from typing import TypeVar
+
+from django.conf import settings
 from django.test import TestCase
 
 from django.core.files.uploadedfile import UploadedFile
 from django.db.models import Model
+from django.test import override_settings
 
 from travels.models import Language, Info, Image, Country, City, PlaceType, Place, Rout, RoutPoint
 
 TModel = TypeVar('TModel', bound=Model)
 TUploadedFile = TypeVar('TUploadedFile', bound=UploadedFile)
+
+TEMP_MEDIA_ROOT = TemporaryDirectory(dir=settings.BASE_DIR)
 
 
 class BaseTestCase(TestCase):
@@ -91,3 +97,11 @@ class BaseTestCase(TestCase):
 
     def create_test_rout_point(self, *, rout: Rout, place: Place, **extra_fields) -> RoutPoint:
         return self._create_test_model_instance(RoutPoint, rout=rout, place=place, **extra_fields)
+
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT.name)
+class MediaTestCase(BaseTestCase):
+    TEMP_MEDIA_ROOT = TEMP_MEDIA_ROOT
+
+    def tearDown(self):
+        self.TEMP_MEDIA_ROOT.cleanup()
