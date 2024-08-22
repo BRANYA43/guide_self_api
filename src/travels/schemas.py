@@ -12,6 +12,14 @@ class InfoResolveMixin:
         return obj.info.first()
 
 
+class MainImageResolveMixin:
+    @staticmethod
+    def resolve_main_image(obj):
+        if (img := obj.main_image.first()) is not None:
+            return img.file.url
+        return img
+
+
 ########################################################################################################################
 # Fields
 ########################################################################################################################
