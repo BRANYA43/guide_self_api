@@ -1,4 +1,4 @@
-from ninja import ModelSchema
+from ninja import ModelSchema, Schema
 from pydantic import UUID4
 
 from travels.models import Info, Country
@@ -7,13 +7,13 @@ from travels.models import Info, Country
 ########################################################################################################################
 # Resolve Mixins
 ########################################################################################################################
-class InfoResolveMixin:
+class InfoResolveMixin(Schema):
     @staticmethod
     def resolve_info(obj) -> Info | None:
         return obj.info.first()
 
 
-class MainImageResolveMixin:
+class MainImageResolveMixin(Schema):
     @staticmethod
     def resolve_main_image(obj):
         if (img := obj.main_image.first()) is not None:
