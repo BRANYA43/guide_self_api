@@ -1,13 +1,10 @@
-import shutil
 from datetime import timedelta
 from pathlib import Path
 
 from admin_ordering.models import OrderableModel
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import override_settings
 from travels.models import (
     Language,
     Info,
@@ -24,9 +21,7 @@ from travels.models import (
     Journey,
 )
 from utils.models import BaseModel, UUIDMixin, DatesMixin
-from utils.tests import BaseTestCase
-
-TEMP_MEDIA_ROOT: Path = settings.BASE_DIR / 'temp_media'
+from utils.tests import BaseTestCase, MediaTestCase
 
 
 class JourneyModelTest(BaseTestCase):
@@ -220,15 +215,11 @@ class ImageAndInfoBaseModelTest(BaseTestCase):
         self.assertTrue(issubclass(ImageAndInfoBaseModel, BaseModel))
 
 
-@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
-class ExtraImageProxyModelTest(BaseTestCase):
+class ExtraImageProxyModelTest(MediaTestCase):
     def setUp(self):
         self.file = SimpleUploadedFile(name='image.png', content=b'imagepng', content_type='image/png')
         self.lang = self.create_test_language()
         self.image = ExtraImage(slug='lang_image', content_obj=self.lang, file=self.file)
-
-    def tearDown(self):
-        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def test_model_inherit_image(self):
         self.assertTrue(issubclass(ExtraImage, Image))
@@ -238,15 +229,11 @@ class ExtraImageProxyModelTest(BaseTestCase):
         self.assertEqual(self.image.type, Image.Type.EXTRA)
 
 
-@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
-class MainImageProxyModelTest(BaseTestCase):
+class MainImageProxyModelTest(MediaTestCase):
     def setUp(self):
         self.file = SimpleUploadedFile(name='image.png', content=b'imagepng', content_type='image/png')
         self.lang = self.create_test_language()
         self.image = MainImage(slug='lang_image', content_obj=self.lang, file=self.file)
-
-    def tearDown(self):
-        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def test_model_inherit_image(self):
         self.assertTrue(issubclass(MainImage, Image))
@@ -256,22 +243,20 @@ class MainImageProxyModelTest(BaseTestCase):
         self.assertEqual(self.image.type, Image.Type.MAIN)
 
 
-@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
-class ImageModelTest(BaseTestCase):
+class ImageModelTest(MediaTestCase):
     def setUp(self):
         self.file = SimpleUploadedFile(name='image.png', content=b'imagepng', content_type='image/png')
         self.lang = self.create_test_language()
         self.image = Image(slug='lang_image', content_obj=self.lang, file=self.file)
-
-    def tearDown(self):
-        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def test_model_inherit_base_model(self):
         self.assertTrue(issubclass(Image, BaseModel))
 
     def test_file_field_uses_uploader(self):
         self.image.save()
-        self.assertEqual(self.image.file.path, str(Path(TEMP_MEDIA_ROOT, 'images/language', f'{self.image.slug}.png')))
+        self.assertEqual(
+            self.image.file.path, str(Path(self.TEMP_MEDIA_ROOT.name, 'images/language', f'{self.image.slug}.png'))
+        )
 
 
 class InfoModelTest(BaseTestCase):
