@@ -1,7 +1,20 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from travels.schemas import InfoResolveMixin, MainImageResolveMixin
+from travels.schemas import InfoResolveMixin, MainImageResolveMixin, CountrySummarySchema
 from utils.tests import BaseTestCase, MediaTestCase
+
+
+class CountrySummarySchemaTest(BaseTestCase):
+    def setUp(self):
+        self.schema = CountrySummarySchema
+
+    def test_schema_inherit_mixins(self):
+        self.assertTrue(
+            issubclass(
+                self.schema,
+                (InfoResolveMixin, MainImageResolveMixin),
+            )
+        )
 
 
 class MainImageResolveMixinTest(MediaTestCase):

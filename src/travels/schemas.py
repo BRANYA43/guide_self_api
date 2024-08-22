@@ -1,6 +1,7 @@
 from ninja import ModelSchema
+from pydantic import UUID4
 
-from travels.models import Info
+from travels.models import Info, Country
 
 
 ########################################################################################################################
@@ -38,3 +39,11 @@ class InfoDetailField(ModelSchema):
 ########################################################################################################################
 # CRUD Schemas
 ########################################################################################################################
+class CountrySummarySchema(InfoResolveMixin, MainImageResolveMixin, ModelSchema):
+    id: UUID4
+    info: InfoSummaryField | None
+    main_image: str | None
+
+    class Meta:
+        model = Country
+        fields = ('id', 'info', 'main_image')
