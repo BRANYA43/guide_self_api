@@ -17,6 +17,12 @@ class InfoSummaryField(ModelSchema):
         fields = ('name', 'short_descr')
 
 
+class InfoDetailField(ModelSchema):
+    class Meta:
+        model = Info
+        fields = ('name', 'full_descr')
+
+
 ########################################################################################################################
 # CRUD Schemas
 ########################################################################################################################
