@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import Type
+from typing import TypeVar
 from django.test import TestCase
 
 from django.core.files.uploadedfile import UploadedFile
@@ -7,10 +7,13 @@ from django.db.models import Model
 
 from travels.models import Language, Info, Image, Country, City, PlaceType, Place, Rout, RoutPoint
 
+TModel = TypeVar('TModel', bound=Model)
+TUploadedFile = TypeVar('TUploadedFile', bound=UploadedFile)
+
 
 class BaseTestCase(TestCase):
     @staticmethod
-    def _create_test_model_instance(model: Type[Model], **data):
+    def _create_test_model_instance(model: type[Model], **data):
         return model.objects.create(**data)
 
     def create_test_language(self, *, slug='language', code='la', **extra_fields) -> Language:
@@ -18,7 +21,7 @@ class BaseTestCase(TestCase):
 
     def create_test_info(
         self,
-        content_obj: Type[Model],
+        content_obj: TModel,
         *,
         lang: Language,
         slug='info',
@@ -36,9 +39,9 @@ class BaseTestCase(TestCase):
 
     def create_test_image(
         self,
-        content_obj: Type[Model],
+        content_obj: TModel,
         *,
-        file: Type[UploadedFile],
+        file: TUploadedFile,
         slug='image',
         type=Image.Type.MAIN,
         **extra_fields,
