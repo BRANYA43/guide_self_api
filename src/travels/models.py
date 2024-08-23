@@ -277,6 +277,11 @@ class MainImage(Image):
             self.type = Image.Type.MAIN
         super().save(force_insert, force_update, using, update_fields)
 
+    async def asave(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.type != Image.Type.MAIN:
+            self.type = Image.Type.MAIN
+        await super().asave(force_insert, force_update, using, update_fields)
+
 
 class ExtraImage(Image):
     class Meta:
@@ -288,3 +293,8 @@ class ExtraImage(Image):
         if self.type != Image.Type.EXTRA:
             self.type = Image.Type.EXTRA
         super().save(force_insert, force_update, using, update_fields)
+
+    async def asave(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.type != Image.Type.EXTRA:
+            self.type = Image.Type.EXTRA
+        await super().asave(force_insert, force_update, using, update_fields)

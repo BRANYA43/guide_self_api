@@ -228,6 +228,10 @@ class ExtraImageProxyModelTest(MediaTestCase):
         self.image.save()
         self.assertEqual(self.image.type, Image.Type.EXTRA)
 
+    async def test_model_sets_type_as_EXTRA_at_async_save_time(self):
+        await self.image.asave()
+        self.assertEqual(self.image.type, Image.Type.EXTRA)
+
 
 class MainImageProxyModelTest(MediaTestCase):
     def setUp(self):
@@ -240,6 +244,10 @@ class MainImageProxyModelTest(MediaTestCase):
 
     def test_model_sets_type_as_MAIN_at_save_time(self):
         self.image.save()
+        self.assertEqual(self.image.type, Image.Type.MAIN)
+
+    async def test_model_sets_type_as_MAIN_at_async_save_time(self):
+        await self.image.asave()
         self.assertEqual(self.image.type, Image.Type.MAIN)
 
 
