@@ -8,7 +8,7 @@ from django.core.files.uploadedfile import UploadedFile
 from django.db.models import Model
 from django.test import override_settings, TestCase
 
-from travels.models import Language, Info, Image, Country, City, PlaceType, Place, Rout, RoutPoint
+from travels.models import Language, Info, Image, Country, City, PlaceType, Place, Rout, RoutPoint, Journey
 
 TModel = TypeVar('TModel', bound=Model)
 TUploadedFile = TypeVar('TUploadedFile', bound=UploadedFile)
@@ -176,6 +176,12 @@ class BaseTestCase(TestCase):
 
     async def acreate_test_rout_point(self, *, rout: Rout, place: Place, **extra_fields) -> RoutPoint:
         return await self._acreate_test_model_instance(RoutPoint, rout=rout, place=place, **extra_fields)
+
+    def create_test_journey(self, *, user, rout: Rout, **extra_fields) -> Journey:
+        return self._create_test_model_instance(Journey, user=user, rout=rout, **extra_fields)
+
+    async def acreate_test_journey(self, *, user, rout: Rout, **extra_fields) -> Journey:
+        return await self._acreate_test_model_instance(Journey, user=user, rout=rout, **extra_fields)
 
 
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT.name)
