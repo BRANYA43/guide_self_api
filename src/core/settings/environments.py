@@ -35,9 +35,18 @@ class SuperuserEnvs(_BaseSettings):
     password: Annotated[str, Field(alias='DJANGO_SUPERUSER_EMAIL')]
 
 
+class DBEnvs(_BaseSettings):
+    name: Annotated[str, Field(alias='POSTGRES_DB')]
+    host: Annotated[str, Field('0.0.0.0', alias='POSTGRES_HOST')]
+    port: Annotated[int, Field(5432, alias='POSTGRES_PORT')]
+    user: Annotated[str, Field(alias='POSTGRES_USER')]
+    password: Annotated[str, Field(alias='POSTGRES_PASSWORD')]
+
+
 class Envs:
     api = ApiEnvs()  # type: ignore
     superuser = SuperuserEnvs()  # type: ignore
+    db = DBEnvs()  # type: ignore
 
 
 envs = Envs
