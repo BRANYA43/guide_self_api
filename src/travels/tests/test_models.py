@@ -77,21 +77,21 @@ class RoutPointModelTest(BaseTestCase):
         self.assertEqual(point_2_1.ordering, 10)
         self.assertEqual(point_2_2.ordering, 20)
 
-    def test_previous_property_returns_previous_rout_point_or_none(self):
+    async def test_previous_property_returns_previous_rout_point_or_none(self):
         del self.data['ordering']
-        point_1 = RoutPoint.objects.create(**self.data, ordering=10)
-        point_2 = RoutPoint.objects.create(**self.data, ordering=20)
+        point_1 = await RoutPoint.objects.acreate(**self.data, ordering=10)
+        point_2 = await RoutPoint.objects.acreate(**self.data, ordering=20)
 
-        self.assertIsNone(point_1.previous)
-        self.assertEqual(point_2.previous.id, point_1.id)
+        self.assertIsNone(await point_1.previous)
+        self.assertEqual((await point_2.previous).id, point_1.id)
 
-    def test_next_property_returns_next_rout_point_or_none(self):
+    async def test_next_property_returns_next_rout_point_or_none(self):
         del self.data['ordering']
-        point_1 = RoutPoint.objects.create(**self.data, ordering=10)
-        point_2 = RoutPoint.objects.create(**self.data, ordering=20)
+        point_1 = await RoutPoint.objects.acreate(**self.data, ordering=10)
+        point_2 = await RoutPoint.objects.acreate(**self.data, ordering=20)
 
-        self.assertEqual(point_1.next.id, point_2.id)
-        self.assertIsNone(point_2.next)
+        self.assertEqual((await point_1.next).id, point_2.id)
+        self.assertIsNone(await point_2.next)
 
 
 class RoutModelTest(BaseTestCase):

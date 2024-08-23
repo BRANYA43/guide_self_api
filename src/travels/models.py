@@ -103,16 +103,16 @@ class RoutPoint(UUIDMixin, DatesMixin, OrderableModel):
 
     # TODO previous and next must be async methods
     @property
-    def previous(self) -> Union['RoutPoint', None]:
+    async def previous(self) -> Union['RoutPoint', None]:
         try:
-            return self.rout.points.get(ordering=self.ordering - 10)
+            return await self.rout.points.aget(ordering=self.ordering - 10)
         except self.DoesNotExist:
             return None
 
     @property
-    def next(self) -> Union['RoutPoint', None]:
+    async def next(self) -> Union['RoutPoint', None]:
         try:
-            return self.rout.points.get(ordering=self.ordering + 10)
+            return await self.rout.points.aget(ordering=self.ordering + 10)
         except self.DoesNotExist:
             return None
 
