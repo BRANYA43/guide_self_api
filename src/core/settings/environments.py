@@ -13,7 +13,7 @@ from core.settings import BASE_DIR
 class _BaseSettings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=(BASE_DIR / '../environments/.env'),
-        extra='allow',
+        extra='ignore',
     )
 
 
