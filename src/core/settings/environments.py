@@ -2,6 +2,7 @@
 Environment values
 """
 
+import os
 from typing import Annotated
 
 from pydantic import field_validator, EmailStr, Field
@@ -21,6 +22,7 @@ class ApiEnvs(_BaseSettings):
     secret_key: Annotated[str, Field(alias='DJANGO_SECRET_KEY')]
     debug: Annotated[bool, Field(False, alias='DJANGO_DEBUG')]
     allowed_hosts: Annotated[list[str], str, Field(['*'], alias='DJANGO_ALLOWED_HOST')]
+    docker_run: bool = os.environ.get('DOCKER_RUN') in ('1', 'True', 'true')
 
     @field_validator('allowed_hosts', mode='before')
     def split_allowed_hosts(cls, v: str | list[str]) -> list[str]:
