@@ -12,6 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Settings files
 _settings = (
     'base',
+    'database',
     'baton',
 )
 
