@@ -47,3 +47,13 @@ class CountrySummarySchema(InfoResolveMixin, MainImageResolveMixin, ModelSchema)
     class Meta:
         model = Country
         fields = ('id', 'info', 'main_image')
+
+
+class CountryDetailSchema(InfoResolveMixin, MainImageResolveMixin, ModelSchema):
+    id: UUID4
+    info: InfoDetailField | None
+    main_image: str | None
+
+    class Meta:
+        model = Country
+        fields = ('id', 'info', 'main_image')
