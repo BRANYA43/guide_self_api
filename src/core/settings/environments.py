@@ -21,7 +21,7 @@ class _BaseSettings(BaseSettings):
 class ApiEnvs(_BaseSettings):
     secret_key: Annotated[str, Field(alias='DJANGO_SECRET_KEY')]
     debug: Annotated[bool, Field(False, alias='DJANGO_DEBUG')]
-    allowed_hosts: Annotated[list[str], str, Field(['*'], alias='DJANGO_ALLOWED_HOST')]
+    allowed_hosts: Annotated[list[str] | str, Field(['*'], alias='DJANGO_ALLOWED_HOSTS')]
     docker_run: bool = os.environ.get('DOCKER_RUN') in ('1', 'True', 'true')
 
     @field_validator('allowed_hosts', mode='before')
